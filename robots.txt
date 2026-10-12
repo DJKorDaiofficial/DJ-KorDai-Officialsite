@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://djkordaiofficial.github.io/DJ-KorDai-Officialsite/sitemap.xml
