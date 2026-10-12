@@ -255,6 +255,7 @@ img{max-width:100%}
         <button type="button" data-tag="戦闘" aria-pressed="false">戦闘</button>
         <button type="button" data-tag="ボス戦" aria-pressed="false">ボス戦</button>
         <button type="button" data-tag="フィールド" aria-pressed="false">フィールド</button>
+        <button type="button" data-tag="回想" aria-pressed="false">回想</button>
         <button type="button" data-tag="情景" aria-pressed="false">情景</button>
       </div>
       <ul class="tracks" id="tracks"></ul>
@@ -345,15 +346,16 @@ img{max-width:100%}
 /* ---------- track list + player ---------- */
 (function(){
   var tracks = [
-    {file:'tracks/t1.mp3', title:'仲間と共に立ち向かえ', tag:'戦闘',     dur:'2:41'},
-    {file:'tracks/t2.mp3', title:'湖上の戦線',           tag:'戦闘',     dur:'2:40'},
-    {file:'tracks/t3.mp3', title:'Battle',               tag:'戦闘',     dur:'4:12'},
-    {file:'tracks/t4.mp3', title:'世界樹を蹂躙す異形の怪物たち', tag:'ボス戦', dur:'2:54'},
-    {file:'tracks/t5.mp3', title:'現る未来と古の異形達', tag:'ボス戦',   dur:'6:14'},
-    {file:'tracks/t6.mp3', title:'古の大平原',           tag:'フィールド', dur:'6:01'},
-    {file:'tracks/t7.mp3', title:'草原',                 tag:'フィールド', dur:'2:38'},
-    {file:'tracks/t8.mp3', title:'潮風香る花園',         tag:'フィールド', dur:'2:00'},
-    {file:'tracks/t9.mp3', title:'夕空',                 tag:'情景',     dur:'2:10', credit:'歌唱：要柳まゆ'}
+    {file:'tracks/t1.mp3',  title:'仲間と共に立ち向かえ', tags:['戦闘'], dur:'2:41'},
+    {file:'tracks/t2.mp3',  title:'湖上の戦線',           tags:['戦闘'], dur:'2:40'},
+    {file:'tracks/t3.mp3',  title:'Battle',               tags:['戦闘'], dur:'4:12'},
+    {file:'tracks/t6.mp3',  title:'古の大平原',           tags:['戦闘'], dur:'6:01'},
+    {file:'tracks/t7.mp3',  title:'草原',                 tags:['戦闘'], dur:'2:38'},
+    {file:'tracks/t4.mp3',  title:'世界樹を蹂躙す異形の怪物たち', tags:['ボス戦'], dur:'2:54'},
+    {file:'tracks/t5.mp3',  title:'現る未来と古の異形達', tags:['ボス戦'], dur:'6:14'},
+    {file:'tracks/t8.mp3',  title:'潮風香る花園',         tags:['フィールド'], dur:'2:00'},
+    {file:'tracks/t10.mp3', title:'水と魔法の世界 そしてサイハテ', tags:['回想','フィールド'], dur:'3:00'},
+    {file:'tracks/t9.mp3',  title:'夕空',                 tags:['情景'], dur:'2:10', credit:'歌唱：要柳まゆ'}
   ];
 
   var list = document.getElementById('tracks');
@@ -364,12 +366,12 @@ img{max-width:100%}
   tracks.forEach(function(t, i){
     var li = document.createElement('li');
     li.className = 'track';
-    li.dataset.tag = t.tag;
+    li.dataset.tags = t.tags.join('|');
     li.innerHTML =
       '<div class="track-row">' +
         '<button class="play" type="button" aria-label="再生：' + t.title + '">' + playSvg + '</button>' +
         '<div class="t-main"><div class="t-title">' + t.title + '</div>' +
-        '<div class="t-meta"><span class="tag">' + t.tag + '</span>' +
+        '<div class="t-meta">' + t.tags.map(function(tg){ return '<span class="tag">' + tg + '</span>'; }).join('') +
         (t.credit ? '<span class="credit">' + t.credit + '</span>' : '') + '</div></div>' +
         '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>' +
         '<span class="t-time"><span class="cur" hidden>0:00 / </span>' + t.dur + '</span>' +
@@ -449,7 +451,7 @@ img{max-width:100%}
       filterBtns.forEach(function(b){ b.setAttribute('aria-pressed', String(b === btn)); });
       var tag = btn.dataset.tag;
       rows.forEach(function(li){
-        li.hidden = (tag !== 'all' && li.dataset.tag !== tag);
+        li.hidden = (tag !== 'all' && li.dataset.tags.split('|').indexOf(tag) === -1);
       });
     });
   });
